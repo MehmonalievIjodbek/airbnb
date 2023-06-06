@@ -4,6 +4,8 @@ import Navbar from "./components/navbar/Navbar";
 import "./globals.css";
 import { Nunito } from "next/font/google";
 import ToasterProvider from "./providers/ToasterProvider";
+import LoginModal from "./components/modals/LoginModal";
+import getCurrentUser from "./actions/getCurrentUser";
 
 const inter = Nunito({ subsets: ["latin"] });
 
@@ -12,15 +14,16 @@ export const metadata = {
   description: "Airbnb clone",
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const currentUser = await getCurrentUser();
   return (
     <html lang="en">
       <body className={inter.className}>
         <ClientOnly>
           <ToasterProvider />
+          <LoginModal />
           <RegisterModal />
-          <Navbar />
-          {/* <Modal actionLabel="Submit" title="Hello World" isOpen /> */}
+          <Navbar currentUser={currentUser} />
         </ClientOnly>
         {children}
       </body>
