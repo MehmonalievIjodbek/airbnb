@@ -12,10 +12,13 @@ import Modal from './Modal'
 import Input from '../inputs/Input'
 import toast from 'react-hot-toast'
 import Button from '../Button'
+import { useRouter } from 'next/navigation'
+import { signIn } from 'next-auth/react'
 
 const RegisterModal = () => {
   const registerModal = useRegisterModal()
   const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
 
   const {
     register,
@@ -37,6 +40,7 @@ const RegisterModal = () => {
       .then(() => {
         registerModal.onClose()
         toast.success('Success')
+        router.refresh()
       })
       .catch((error) => {
         toast.error('Something')
@@ -95,7 +99,7 @@ const RegisterModal = () => {
         outline
         label="Continue with Github"
         icon={AiFillGithub}
-        onClick={() => {}}
+        onClick={() => signIn('github')}
       />
       <div className="text-neutral-500 text-center mt-4 font-light">
         <div className="flex justify-center  flex-row items-center gap-2">
