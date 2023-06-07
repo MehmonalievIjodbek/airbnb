@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { AiFillGithub } from 'react-icons/ai'
 import { FcGoogle } from 'react-icons/fc'
 import { FieldValues, useForm, SubmitHandler } from 'react-hook-form'
@@ -13,9 +13,11 @@ import Button from '../Button'
 import useLoginModal from '../../hooks/useLoginModal'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import useRegisterModal from '../../hooks/useRegisterModal'
 
 const LoginModal = () => {
   const loginModal = useLoginModal()
+  const registerModal = useRegisterModal()
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
 
@@ -52,6 +54,11 @@ const LoginModal = () => {
     })
   }
 
+  const toggle = useCallback(() => {
+    loginModal.onClose()
+    registerModal.onOpen()
+  }, [loginModal, registerModal])
+
   const bodyContent = (
     <div className="flex flex-col gap-4">
       <Heading title="Welcome to Airbnb" subtitle="Create an Account" />
@@ -87,19 +94,22 @@ const LoginModal = () => {
         outline
         label="Continue with Google"
         icon={FcGoogle}
-        onClick={() => {}}
+        onClick={() => signIn('google')}
       />
       <Button
         outline
         label="Continue with Github"
         icon={AiFillGithub}
-        onClick={() => {}}
+        onClick={() => signIn('github')}
       />
       <div className="text-neutral-500 text-center mt-4 font-light">
         <div className="flex justify-center  flex-row items-center gap-2">
-          <div>Already have an accaount?</div>
-          <div className="text-neutral-800 cursor-pointer hover:underline ">
-            Sign Up
+          <div>First time using Airbnb</div>
+          <div
+            onClick={toggle}
+            className="text-neutral-800 cursor-pointer hover:underline "
+          >
+            Create an accaunt
           </div>
         </div>
       </div>
